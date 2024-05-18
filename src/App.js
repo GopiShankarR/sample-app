@@ -1,27 +1,30 @@
 import './App.css';
-import { useState } from "react";
-import Axios from 'axios';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Home } from './pages/Home';
+import { Profile } from './pages/Profile';
+import { Contact } from './pages/Contact';
+import { Navbar } from './Navbar';
+import { useState, createContext } from 'react';
 
+export const AppContext = createContext();
 
 function App() {
-  const [name, setName] = useState("");
-  const [predictedOutput, setPredictedOutput] = useState(null);
-
-  const predictAge = () => {
-    Axios.get(`https://api.agify.io/?name=${name}`).then((res) => {
-      setPredictedOutput(res.data);
-    })
-  };
-
+  const [username, setUsername] = useState("Gopi");
   return (
     <div className='App'>
-      <input placeholder='Enter Name' onChange={(event) => setName(event.target.value)}/>
-      <button onClick={predictAge}>Predict Age</button>
-      <h2>Name: {predictedOutput?.name}</h2>
-      <h2>Predicted Age: {predictedOutput?.age}</h2>
-      <h2>Count: {predictedOutput?.count}</h2>
+      <AppContext.Provider value={{username, setUsername}}>
+        <Router>
+          <Navbar />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/profile' element={<Profile />} />
+              <Route path='/contact' element={<Contact />} />
+              <Route path='*' element={<h2>THE PAGE YOU ARE SEARCHING IS NOT FOUND</h2>} />
+            </Routes>
+        </Router>
+      </AppContext.Provider>
     </div>
-  );
+  )
 }
 
 export default App;
