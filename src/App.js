@@ -4,15 +4,20 @@ import { Home } from './pages/Home';
 import { Profile } from './pages/Profile';
 import { Contact } from './pages/Contact';
 import { Navbar } from './Navbar';
-import { useState, createContext } from 'react';
+import { createContext } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export const AppContext = createContext();
 
 function App() {
-  const [username, setUsername] = useState("Gopi");
+  const client = new QueryClient({defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }});
   return (
     <div className='App'>
-      <AppContext.Provider value={{username, setUsername}}>
+      <QueryClientProvider client={client}>
         <Router>
           <Navbar />
             <Routes>
@@ -22,7 +27,7 @@ function App() {
               <Route path='*' element={<h2>THE PAGE YOU ARE SEARCHING IS NOT FOUND</h2>} />
             </Routes>
         </Router>
-      </AppContext.Provider>
+      </QueryClientProvider>
     </div>
   )
 }
